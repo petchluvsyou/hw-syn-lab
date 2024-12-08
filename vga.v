@@ -80,7 +80,7 @@ module vga(
     always @(posedge clk or posedge reset) begin
         if (reset) begin
             for (i = 0; i < 80; i = i + 1) begin
-                for (j = 0; j < 29; j = j + 1) begin
+                for (j = 0; j < 30; j = j + 1) begin
                     grid[i][j] <= 8'b00000000;
                 end
             end
@@ -99,7 +99,7 @@ module vga(
         else if (en & ~last_en) begin
             // Write data to grid when enabled
             if(data!=8'b00001010) grid[i][j] <= data;
-            else begin grid[i][j]<=8'b00000000; j=j+1; i=20; end
+            else begin grid[i][j]<=8'b00000000; j=j+1; i=19; end
             if (i >= 59) begin
                 i = 20;
                 if (j >= 24) begin
@@ -109,6 +109,9 @@ module vga(
                 end
             end else begin
                 i = i + 1;
+                if (j >= 24) begin
+                    j = 8;
+                end
             end
         end
         last_en <= en;  
@@ -136,9 +139,10 @@ module vga(
             pixel_on <= bitmap[3'b111 - col];
 
             red <= (pixel_on) ? 4'hF : 
-                (!(char_x <= 59 && char_x >= 20 && char_y <= 24 && char_y >= 8) ? 4'hF : 4'h0);
-            green <= (pixel_on) ? 4'hF : 4'h0;
-            blue <= (pixel_on) ? 4'hF : 4'h0;
+                (!(char_x <= 59 && char_x >= 20 && char_y <= 24 && char_y >= 8) ? 4'h6 : 4'h2);
+            green <= (pixel_on) ? 4'hF : 4'h2;
+            blue <= (pixel_on) ? 4'hF : 
+                (!(char_x <= 59 && char_x >= 20 && char_y <= 24 && char_y >= 8) ? 4'h6 : 4'h2);
         end else begin
             // Background color when video is off
             red <= 4'hF;

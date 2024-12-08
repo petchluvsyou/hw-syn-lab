@@ -66,6 +66,8 @@ module system(
     ////////////////////////////////////////
     wire [7:0] data_in;
     wire received;
+    wire gnd;
+    wire [7:0] gnd_b;
     assign {num3, num2} = data_in;
     assign {num1, num0} = sw;
     
